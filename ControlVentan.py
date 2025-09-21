@@ -2,24 +2,34 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QPushButton, QL
 from PyQt5.QtGui import QIcon
 import sys
 
+
 app = QApplication(sys.argv)
 
 #Funcion para el agragar la venta 
 def venta():
     producto = entrada1.text()
-    monto = entrada2.text()
+    cantidad = entrada2.text()
+    monto = entrada3.text()
 
-    if producto and monto:
+    if producto and cantidad and monto:
         try:
             monto_float = float(monto)
-            lista_ventas.addItem(f"{producto}  ${monto_float:.2f}")
+            lista_ventas.addItem(f"{producto}  #{cantidad} ${monto_float:.2f}")
             entrada1.clear()
             entrada2.clear()
+            entrada3.clear()
         except ValueError:
             QMessageBox.warning(ventana, "Error", "Monto debe ser un nmero valido.")
     else:
         QMessageBox.warning(ventana, "Error", "Por favor ingrese rl producto y monto.")
 
+
+def eliminar():
+    item = lista_ventas.currentItem()
+    if item:
+        lista_ventas.takeItem(lista_ventas.row(item))
+    else:
+        QMessageBox.warning(ventana, "Error", "Porfa seleccione una venta para eliminar.")
 
 
 ventana = QWidget()
@@ -33,10 +43,14 @@ ventana.setWindowIcon(icono)
 layout = QVBoxLayout()
 texto1 = QLabel("Producto")
 entrada1 = QLineEdit()
-texto2 = QLabel("Monto")
+texto2 = QLabel("Producto")
 entrada2 = QLineEdit()
+texto3 = QLabel("Monto")
+entrada3 = QLineEdit()
 layout.addWidget(texto1)
 layout.addWidget(entrada1)
+layout.addWidget(texto2)
+layout.addWidget(entrada2)
 layout.addWidget(texto2)
 layout.addWidget(entrada2)
 
@@ -48,6 +62,10 @@ layout.addWidget(lista_ventas)
 boton1 = QPushButton("Agregar venta")
 boton1.clicked.connect(venta)
 layout.addWidget(boton1)
+
+boton2 = QPushButton("Eliminar venta")
+boton2.clicked.connect(eliminar)
+layout.addWidget(boton2)
 
 
 
